@@ -39,6 +39,7 @@ private slots:
     void about();
     void setWorkInProgress();
     void getCalculationResults(QString);
+    void resizeEvent(QResizeEvent *e);
 
 
 private:
@@ -47,13 +48,10 @@ private:
     void createToolBars();
     void createStatusBar();
     void createDockWidgets();
-
     DilutionDefiner *definer;
-
     PlateView *plateView;
     QListWidget *customerList;
     QListWidget *paragraphsList;
-
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *viewMenu;
@@ -63,7 +61,6 @@ private:
     QAction *newLetterAct;
     QAction *saveAct;
     QAction *openAct;
-    QAction *printAct;
     QAction *undoAct;
     QAction *aboutAct;
     QAction *aboutQtAct;

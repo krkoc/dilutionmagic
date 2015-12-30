@@ -11,10 +11,10 @@ Converter::Converter(QObject *parent) : QObject(parent)
     unitVolMap["ul"]=1;
     unitVolMap["nl"]=10E-3;
     unitVolMap["pl"]=10E-6;
-    unitMolMap["mM"]=10E3;
-    unitMolMap["uM"]=1;
-    unitMolMap["nM"]=10E-3;
-    unitMolMap["pM"]=10E-6;
+    unitMassMap["mM"]=10E3;
+    unitMassMap["uM"]=1;
+    unitMassMap["nM"]=10E-3;
+    unitMassMap["pM"]=10E-6;
 }
 
 double Converter::convert(double quantity, QString inputUnit, QString outputUnit)
@@ -27,26 +27,32 @@ double Converter::convert(double quantity, QString inputUnit, QString outputUnit
         massInUnit = inputUnit.mid(0,indexOfSlash);
         volInUnit  = inputUnit.mid(indexOfSlash+1);
     }
+    if (indexOfSlash == -1){
+         massInUnit = inputUnit.left(2);  //uM for eample
+
+         volInUnit  = outputUnit.right(2);
+    }
     indexOfSlash= outputUnit.indexOf("/");
     if (indexOfSlash >0){
         massOutUnit = outputUnit.mid(0,indexOfSlash);
         volOutUnit  = outputUnit.mid(indexOfSlash+1);
     }
-  //  if (indexOfSlash = -1)
-//    qDebug()<<massInUnit;
-//    qDebug()<<volInUnit;
-//    qDebug()<<massOutUnit;
-//    qDebug()<<volOutUnit;
-//    qDebug()<<unitVolMap[volOutUnit];
-//    qDebug()<<unitVolMap[volInUnit];
-//    qDebug()<<unitMassMap[massOutUnit];
-//    qDebug()<<unitMassMap[massInUnit];
+
+
+    qDebug()<<massInUnit;
+    qDebug()<<volInUnit;
+    qDebug()<<massOutUnit;
+    qDebug()<<volOutUnit;
+    qDebug()<<unitVolMap[volOutUnit];
+    qDebug()<<unitVolMap[volInUnit];
+    qDebug()<<unitMassMap[massOutUnit];
+    qDebug()<<unitMassMap[massInUnit];
     double y = unitVolMap[volOutUnit]/unitVolMap[volInUnit];
-//    qDebug()<<"y"<<y;
+    qDebug()<<"y"<<y;
     double x = unitMassMap[massOutUnit]/unitMassMap[massInUnit];
-//    qDebug()<<"x"<<x;
+    qDebug()<<"x"<<x;
     result=quantity*(y/x);
-//    qDebug()<<result;
+    qDebug()<<result;
     return result;
 }
 

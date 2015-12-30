@@ -69,7 +69,7 @@ SelectionWidget::SelectionWidget()
     setLayout(mainLayout);
 
     resize(500, 450);
-    proxyModel->setFilterRegExp("");
+    proxyModel->setFilterRegExp("nonexisting well name, so the table is emtpy at first");
     calc = new Calculator;
 }
 
@@ -91,7 +91,7 @@ void SelectionWidget::setSourceModel(QStandardItemModel *model)
 void SelectionWidget::textFilterChanged(QString st)
 {
     qDebug()<<"textFiltChanged; "<<st;
-    //if (st=="") st="fake string that yealds empty selection";
+    if (st=="") st="fake string that yealds empty selection";
     proxyModel->setFilterRegExp(st);
     proxyView->selectColumn(0);
     proxyModel->sort(proxyModel->WELL_NAME,Qt::AscendingOrder);
@@ -106,6 +106,7 @@ void SelectionWidget::dateFilterChanged()
 
 void SelectionWidget::calculatePipetingProcedure()
 {
+    if (proxyModel->rowCount()==0) return;
     qDebug()<<"pipeting procedure initiated";
     Qt::SortOrder SortOrder = proxyModel->sortOrder();
     proxyModel->sort(proxyModel->QUANTITY,Qt::DescendingOrder);
@@ -152,7 +153,10 @@ void SelectionWidget::fillSelection(byte mode, double minVal, double maxVal)
     indexList=selMod->selectedIndexes();
     qDebug()<<"minVal"<<minVal;
     qDebug()<<"maxVal"<<maxVal;
-    double step= (maxVal-minVal)/(indexList.length()-1);
+    double step;
+    if (indexList.length()==0) return;
+    step= (maxVal-minVal)/(indexList.length()-1);
+
     int i=0;
     if (mode==1){
         qDebug()<<"linear mode is set";
@@ -164,7 +168,6 @@ void SelectionWidget::fillSelection(byte mode, double minVal, double maxVal)
     else {
         qDebug()<<"exponential mode is set";
         double factor=qPow(maxVal/minVal,1/(double)(indexList.count()-1));
-
         qDebug()<<"factor"<<factor;
         foreach (QModelIndex index, indexList){
         proxyModel->setData(proxyModel->index(index.row(),proxyModel->QUANTITY),minVal*qPow(factor,i));

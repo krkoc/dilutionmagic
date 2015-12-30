@@ -23,7 +23,7 @@ MainWindow::MainWindow()
     definer->setMinimumWidth(220);
     definer->setMaximumWidth(220);
     plateView = new PlateView(selectionWidget->proxyModel,this) ;
-
+    plateView->setMinimumSize(600,500);
     setCentralWidget(plateView);
     createActions();
     createMenus();
@@ -34,7 +34,6 @@ MainWindow::MainWindow()
     //newLetter();
     setUnifiedTitleAndToolBarOnMac(true);
     connect(definer->ui->applyButton,SIGNAL(clicked()),plateView,SLOT(updateColors()));
-    connect(definer->ui->applyButton,SIGNAL(clicked()),selectionWidget,SLOT( calculatePipetingProcedure()));
     connect(definer->ui->calculateButton,SIGNAL(clicked()),selectionWidget,SLOT( calculatePipetingProcedure()));
     connect(definer,SIGNAL(calculateQuantitiesParams(byte,double,double)),selectionWidget,SLOT(fillSelection(byte, double, double)));
     connect(definer->proxyModel,SIGNAL(modelModified()),this,SLOT(setWorkInProgress()));
@@ -290,16 +289,6 @@ void MainWindow::createActions()
     saveAct->setStatusTip(tr("Save the current form letter"));
     connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
-    printAct = new QAction(QIcon(":/images/print.png"), tr("&Print..."), this);
-    printAct->setShortcuts(QKeySequence::Print);
-    printAct->setStatusTip(tr("Print the current form letter"));
-    connect(printAct, SIGNAL(triggered()), this, SLOT(print()));
-
-    undoAct = new QAction(QIcon(":/images/undo.png"), tr("&Undo"), this);
-    undoAct->setShortcuts(QKeySequence::Undo);
-    undoAct->setStatusTip(tr("Undo the last editing action"));
-    connect(undoAct, SIGNAL(triggered()), this, SLOT(undo()));
-
     quitAct = new QAction(tr("&Quit"), this);
     quitAct->setShortcuts(QKeySequence::Quit);
     quitAct->setStatusTip(tr("Quit the application"));
@@ -320,11 +309,10 @@ void MainWindow::createMenus()
     fileMenu->addAction(newLetterAct);
     fileMenu->addAction(saveAct);
     fileMenu->addAction(openAct);
-    fileMenu->addAction(printAct);
-    fileMenu->addSeparator();
+     fileMenu->addSeparator();
     fileMenu->addAction(quitAct);
     editMenu = menuBar()->addMenu(tr("&Edit"));
-    editMenu->addAction(undoAct);
+
     viewMenu = menuBar()->addMenu(tr("&View"));
     menuBar()->addSeparator();
     helpMenu = menuBar()->addMenu(tr("&Help"));
@@ -339,10 +327,8 @@ void MainWindow::createToolBars()
     fileToolBar->addAction(saveAct);
     fileToolBar->addAction(openAct);
 
-    fileToolBar->addAction(printAct);
-
     editToolBar = addToolBar(tr("Edit"));
-    editToolBar->addAction(undoAct);
+
 }
 
 //! [8]
@@ -355,7 +341,7 @@ void MainWindow::createStatusBar()
 //! [9]
 void MainWindow::createDockWidgets()
 {
-    QDockWidget *dock = new QDockWidget(tr("Selected well"), this);
+    QDockWidget *dock = new QDockWidget(tr("Table View"), this);
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::TopDockWidgetArea);
     dock->setWidget(selectionWidget);
     addDockWidget(Qt::RightDockWidgetArea, dock);
@@ -378,5 +364,12 @@ void MainWindow::createDockWidgets()
     addDockWidget(Qt::RightDockWidgetArea, dock);
     viewMenu->addAction(dock->toggleViewAction());
 
+}
+
+
+void MainWindow::resizeEvent(QResizeEvent *e)  // virtual
+{
+   plateView->graphicsView->setGeometry(0,0,centralWidget()->width(),centralWidget()->height());
+   QMainWindow::resizeEvent(e);
 }
 //! [9]

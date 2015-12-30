@@ -46,6 +46,11 @@ void DilutionDefiner::slotToEmitQuantities()
         proxyModel->setData(proxyModel->index(i,proxyModel->VOLUME_UNIT),ui-> unitsVolCombo ->currentText());
         proxyModel->setData(proxyModel->index(i,proxyModel->STOCK_CONC), ui-> quantitySpin ->value());
     }
+    if ((ui->radioLinear->isChecked()==false) && ui->minValueSpin->value()==0){
+        QMessageBox::warning(this, tr("Oooops!"),
+                             tr("Can not start with zero with the log option"));
+                return;
+    }
     emit calculateQuantitiesParams(ui->radioLinear->isChecked(),ui->minValueSpin->value() , ui->maxValueSpin->value());
 }
 

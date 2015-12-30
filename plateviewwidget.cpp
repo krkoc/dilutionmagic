@@ -23,31 +23,35 @@ PlateView::PlateView(ModQSortProxyModel *proxy, QWidget *parent) :
     table= new QTableView;
     layout->addWidget(table);
     scene = new QGraphicsScene(this);
-     graphicsView->setGeometry(QRect(0,0,parent->width(),parent->height()));
+  //  scene->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
     graphicsView->show();
     graphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     //graphicsView->setHorizontalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
     //graphicsView->setVerticalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
     graphicsView->setScene(scene);
-    scene->setSceneRect(0,0,PaintedRect::rectHeight*20,graphicsView->height());
+    graphicsView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     graphicsView->setDragMode(QGraphicsView::RubberBandDrag);
     graphicsView->setRubberBandSelectionMode(Qt::ContainsItemShape);
     QStringList rowString;
     rowString<<"A"<<"B"<<"C"<<"D"<<"E"<<"F"<<"G"<<"H";
-    QFont font ("Tahoma",20, 10);
+    QFont font ("Tahoma",15, 10);
+    font.setBold(false);
     for (int i=0; i < rows; i++){
         QGraphicsTextItem * io = new QGraphicsTextItem;
-        io->setPos(20, 40+i*(PaintedRect::rectHeight+10));
+        io->setDefaultTextColor(QColor(Qt::blue));
+        io->setPos(20, 55+i*(PaintedRect::rectHeight+10));
         io->setFont(font);
+
         io->setPlainText(rowString.at(i));
         scene->addItem(io);
         for (int j=0;j<cols;j++){
             if(i==0){
                 QGraphicsTextItem * io = new QGraphicsTextItem;
-             io->setPos(40+j*(PaintedRect::rectHeight+10),20);
+             io->setPos(50+j*(PaintedRect::rectHeight+10),10);
              io->setFont(font);
+             io->setDefaultTextColor(QColor(Qt::blue));
              io->setPlainText(QString::number(j+1));
-              scene->addItem(io);
+             scene->addItem(io);
             }
             wellItem = new PaintedRect;
             wellItem->setX(50+j*(PaintedRect::rectHeight+10));
@@ -58,6 +62,8 @@ PlateView::PlateView(ModQSortProxyModel *proxy, QWidget *parent) :
         }
     }
     connect(graphicsView,SIGNAL(mouseReleased()),this,SLOT(getSearchString()));
+    graphicsView->setGeometry(QRect(0,0,parent->width(),parent->height()));
+    scene->setSceneRect(0,0,1000,1000);
 }
 
 void PlateView::getSearchString()
@@ -92,15 +98,19 @@ void PlateView::updateColors()
     quantity=stdm->data(stdm->index(i, proxyModel->QUANTITY),Qt::DisplayRole);
     if (quantity.toDouble() > max.toDouble()) max=quantity;
   }
+
   for (int i=0; i<stdm->rowCount();i++){
+
     quantity=stdm->data(stdm->index(i,proxyModel->QUANTITY),Qt::DisplayRole);
 
     solutionName=stdm->data(stdm->index(i,proxyModel->DILUTION),Qt::DisplayRole);
-    plateList.at(i)->wellColumnValue=QVariant(quantity.toDouble()* PaintedRect::rectHeight/max.toDouble());
+    plateList.at(i)->wellColumnValue=QVariant(quantity.toDouble()* 100/max.toDouble()); //100 means percentage of max
 
     plateList.at(i)->wellSolutionName=solutionName;
     plateList.at(i)->update();
   }
+//graphicsView->setGeometry(QRect(0,0,parent->width(),parent->height()));
+ // scene->setSceneRect(0,0,graphicsView->width(),graphicsView->height());
   graphicsView->update();
 }
 
