@@ -5,6 +5,7 @@
 Model::Model(QObject *parent) : QObject(parent)
 {
     model = new QStandardItemModel;
+    headers<<"Well"<<"Dilution_name"<<"Sample"<<"Buffer"<<"Concentration"<<"Concunits"<<"Stock_volume"<<"Well_volume"<<"Volume_units"<<"Stock_conc";
 
 }
 
@@ -12,9 +13,9 @@ Model::Model(QObject *parent) : QObject(parent)
 void Model::setEntry(QStandardItemModel *model, const QString &subject,
              const QString &sender, const double &conc, int index)
 {
-    model->setData(model->index(index, 0), subject);
-    model->setData(model->index(index, 1), sender);
-    model->setData(model->index(index, 2), conc);
+   // model->setData(model->index(index, 0), subject);
+   // model->setData(model->index(index, 1), sender);
+    //model->setData(model->index(index, 2), conc);
 }
 
 
@@ -23,17 +24,15 @@ void Model::setEntry(QStandardItemModel *model, const QString &subject,
 QStandardItemModel *Model::createMailModel(QObject *parent)
 {
     model = new QStandardItemModel(96, 10, parent);
+    int colCount = model->columnCount();
+    QStringList modHdr;
+    modHdr=headers.replaceInStrings("_"," ");
+    for (int i=0; i<colCount ;i++){
 
-    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Well"));
-    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Dilution name"));
-    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Sample name"));
-    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Buffer name"));
-    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Samp. concentr."));
-    model->setHeaderData(5, Qt::Horizontal, QObject::tr("Conc. units"));
-    model->setHeaderData(6, Qt::Horizontal, QObject::tr("Stock volume"));
-    model->setHeaderData(7, Qt::Horizontal, QObject::tr("Sample volume"));
-    model->setHeaderData(8, Qt::Horizontal, QObject::tr("Volume units"));
-    model->setHeaderData(9, Qt::Horizontal, QObject::tr("Stock sol. conc"));
+        model->setHeaderData(i, Qt::Horizontal,modHdr.at(i));
+    }
+
+
 
     //A
     model->setData(model->index(0,0),"A1");     model->setData(model->index(1,0),"A2");     model->setData(model->index(2,0),"A3");
@@ -76,6 +75,7 @@ QStandardItemModel *Model::createMailModel(QObject *parent)
     model->setData(model->index(87,0),"H4");    model->setData(model->index(88,0),"H5");    model->setData(model->index(89,0),"H6");
     model->setData(model->index(90,0),"H7");    model->setData(model->index(91,0),"H8");    model->setData(model->index(92,0),"H9");
     model->setData(model->index(93,0),"H_10");    model->setData(model->index(94,0),"H_11");    model->setData(model->index(95,0),"H_12");
+
     return model;
 }
 

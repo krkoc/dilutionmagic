@@ -11,7 +11,7 @@ public:
     QStandardItemModel *model;
     void setEntry(QStandardItemModel *model, const QString &subject,const QString &sender, const double &conc, int index);
     QStandardItemModel *createMailModel(QObject *parent);
-
+    QStringList headers;
 
 private:
 

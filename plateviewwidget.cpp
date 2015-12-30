@@ -47,7 +47,7 @@ PlateView::PlateView(ModQSortProxyModel *proxy, QWidget *parent) :
         for (int j=0;j<cols;j++){
             if(i==0){
                 QGraphicsTextItem * io = new QGraphicsTextItem;
-             io->setPos(50+j*(PaintedRect::rectHeight+10),10);
+             io->setPos(60+j*(PaintedRect::rectHeight+10),15);
              io->setFont(font);
              io->setDefaultTextColor(QColor(Qt::blue));
              io->setPlainText(QString::number(j+1));
@@ -105,7 +105,6 @@ void PlateView::updateColors()
 
     solutionName=stdm->data(stdm->index(i,proxyModel->DILUTION),Qt::DisplayRole);
     plateList.at(i)->wellColumnValue=QVariant(quantity.toDouble()* 100/max.toDouble()); //100 means percentage of max
-
     plateList.at(i)->wellSolutionName=solutionName;
     plateList.at(i)->update();
   }
