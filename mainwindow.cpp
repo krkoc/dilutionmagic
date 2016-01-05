@@ -257,11 +257,10 @@ void MainWindow::loadFile(const QString &fileName)
 
 void MainWindow::about()
 {
-   QMessageBox::about(this, tr("About Dock Widgets"),
-            tr("The <b>Dock Widgets</b> example demonstrates how to "
-               "use Qt's dock widgets. You can enter your own text, "
-               "click a customer to add a customer name and "
-               "address, and click standard paragraphs to add them."));
+   QMessageBox::about(this, tr("About DilutionMagic"),
+            tr("DilutionMagic is a free dilution calculator. "
+               "It can do serial dilutions <b> with non-constant sample volumes</b> "
+               "and <b>custom concentration steps.</b> Let DilutionMagic do the math!"));
 }
 
 void MainWindow::setWorkInProgress()
@@ -279,10 +278,10 @@ void MainWindow::getCalculationResults(QString text)
 
 void MainWindow::createActions()
 {
-    newLetterAct = new QAction(QIcon(":/images/new.png"), tr("&New Letter"),
+    newLetterAct = new QAction(QIcon(":/images/new.png"), tr("&New Plate"),
                                this);
     newLetterAct->setShortcuts(QKeySequence::New);
-    newLetterAct->setStatusTip(tr("Create a new form letter"));
+    newLetterAct->setStatusTip(tr("Create a new plate"));
     connect(newLetterAct, SIGNAL(triggered()), this, SLOT(newLetter()));
 
     openAct = new QAction(QIcon(":/images/open.png"), tr("&Open..."), this);
@@ -293,7 +292,7 @@ void MainWindow::createActions()
 
     saveAct = new QAction(QIcon(":/images/save.png"), tr("&Save..."), this);
     saveAct->setShortcuts(QKeySequence::Save);
-    saveAct->setStatusTip(tr("Save the current form letter"));
+    saveAct->setStatusTip(tr("Save the current form plate"));
     connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
     quitAct = new QAction(tr("&Quit"), this);
@@ -305,9 +304,8 @@ void MainWindow::createActions()
     aboutAct->setStatusTip(tr("Show the application's About box"));
     connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 
-    aboutQtAct = new QAction(tr("About &Qt"), this);
-    aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
-    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+//   aboutQtAct = new QAction(tr("About &Qt"), this);
+
 }
 
 void MainWindow::createMenus()
@@ -318,13 +316,12 @@ void MainWindow::createMenus()
     fileMenu->addAction(openAct);
      fileMenu->addSeparator();
     fileMenu->addAction(quitAct);
-    editMenu = menuBar()->addMenu(tr("&Edit"));
+  //  editMenu = menuBar()->addMenu(tr("&Edit"));
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     menuBar()->addSeparator();
-    helpMenu = menuBar()->addMenu(tr("&Help"));
+    helpMenu = menuBar()->addMenu(tr("&About"));
     helpMenu->addAction(aboutAct);
-    helpMenu->addAction(aboutQtAct);
 }
 
 void MainWindow::createToolBars()
@@ -334,7 +331,7 @@ void MainWindow::createToolBars()
     fileToolBar->addAction(saveAct);
     fileToolBar->addAction(openAct);
 
-    editToolBar = addToolBar(tr("Edit"));
+  // editToolBar = addToolBar(tr("Edit"));
 
 }
 
@@ -354,19 +351,13 @@ void MainWindow::createDockWidgets()
     addDockWidget(Qt::RightDockWidgetArea, dock);
     viewMenu->addAction(dock->toggleViewAction());
 
-    dock = new QDockWidget(tr("dilution"), this);
+    dock = new QDockWidget(tr("Dilution"), this);
     dock->setWidget(definer);
     addDockWidget(Qt::LeftDockWidgetArea, dock);
     viewMenu->addAction(dock->toggleViewAction());
 
 
-//    dock = new QDockWidget(tr("plateview"), this);
-//    dock->setWidget(plateView);
-//    addDockWidget(Qt::TopDockWidgetArea, dock);
-//    viewMenu->addAction(dock->toggleViewAction());
-
-
-    dock = new QDockWidget(tr("textView"), this);
+    dock = new QDockWidget(tr("Text View"), this);
     dock->setWidget(textEdit);
     addDockWidget(Qt::RightDockWidgetArea, dock);
     viewMenu->addAction(dock->toggleViewAction());

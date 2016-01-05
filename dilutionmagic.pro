@@ -1,6 +1,8 @@
 QT += widgets xml
 qtHaveModule(printsupport): QT += printsupport
 
+win32:RC_ICONS += dmicon.ico
+
 HEADERS =     viewevents.h \
     model.h \
     selectionwidget.h \

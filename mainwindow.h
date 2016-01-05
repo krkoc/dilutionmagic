@@ -53,17 +53,14 @@ private:
     QListWidget *customerList;
     QListWidget *paragraphsList;
     QMenu *fileMenu;
-    QMenu *editMenu;
     QMenu *viewMenu;
     QMenu *helpMenu;
     QToolBar *fileToolBar;
-    QToolBar *editToolBar;
     QAction *newLetterAct;
     QAction *saveAct;
     QAction *openAct;
     QAction *undoAct;
     QAction *aboutAct;
-    QAction *aboutQtAct;
     QAction *quitAct;
 
 
