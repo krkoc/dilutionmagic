@@ -106,12 +106,10 @@ void SelectionWidget::dateFilterChanged()
 
 void SelectionWidget::calculatePipetingProcedure()
 {
-    if (proxyModel->rowCount()==0) return;
+    if (proxyModel->rowCount()==0) return;  //nothing to calculate
     qDebug()<<"pipeting procedure initiated";
     Qt::SortOrder SortOrder = proxyModel->sortOrder();
-    proxyModel->sort(proxyModel->QUANTITY,Qt::DescendingOrder);
-    //make instructions
-    QStandardItem item;
+    proxyModel->sort(proxyModel->QUANTITY,Qt::DescendingOrder); //volumes must be descending for a succesful calculation
     QStandardItemModel *stdm;
     stdm=reinterpret_cast<QStandardItemModel*>(proxyModel);
     QVariant conc, vol, well;
@@ -121,14 +119,15 @@ void SelectionWidget::calculatePipetingProcedure()
     QList <QVariant> concUnitList;
     QList <QVariant> volUnitList;
     QList <QVariant> stockConcentrationList;
-
     QString concUnit, volUnit;
     double stockConcentration;
+
     for (int i=0; i<stdm->rowCount();i++){
       conc=stdm->data(stdm->index(i,proxyModel->QUANTITY),Qt::DisplayRole);
-      vol=stdm->data(stdm->index(i,proxyModel->VOLUME),Qt::DisplayRole);
+      vol=stdm-> data(stdm->index(i,proxyModel->VOLUME),Qt::DisplayRole);
       well=stdm->data(stdm->index(i,proxyModel->WELL_NAME),Qt::DisplayRole);
-      concUnitList.append(stdm->data(stdm->index(i,proxyModel->CONC_UNIT),Qt::DisplayRole));
+
+      concUnitList.append(stdm->data(stdm->index(i,proxyModel->CONC_UNIT),Qt::DisplayRole)); //list concentrations
       volUnitList.append(stdm->data(stdm->index(i,proxyModel->VOLUME_UNIT),Qt::DisplayRole));
       stockConcentrationList.append(stdm->data(stdm->index(i,proxyModel->STOCK_CONC),Qt::DisplayRole));
 
@@ -136,13 +135,14 @@ void SelectionWidget::calculatePipetingProcedure()
       volumes.append(vol.toDouble());
       wells.append(well.toString());
     }
+    stockConcentration = stockConcentrationList.first().toDouble(); //cheating
+    volUnit=volUnitList.first().toString(); //cheating
+    concUnit=concUnitList.first().toString(); //cheating
+    //modyfit to set a nominal concentration for all samples or check equality
 
+    calc->calculateQuantities(wells, concentrations, volumes, stockConcentration, concUnit , proxyModel->outputUnit, volUnit);
 
-    stockConcentration = stockConcentrationList.first().toDouble();
-    volUnit=volUnitList.first().toString();
-    concUnit=concUnitList.first().toString();
-    calc->setCalculationParameters(wells, concentrations, volumes, stockConcentration, concUnit , volUnit);
-    proxyModel->sort(proxyModel->WELL_NAME,SortOrder);
+    proxyModel->sort(proxyModel->WELL_NAME,SortOrder);  //sort by name again
 }
 
 

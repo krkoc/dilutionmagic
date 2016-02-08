@@ -7,16 +7,18 @@
 
 class Calculator : public QWidget
 {
+
 Q_OBJECT
+
 public:
     QList <double> bufferVolumes; //this is returned
     QList <double> intermSolVolumes;
     double stockConcentration;
-    void setCalculationParameters(QList<QString> wells,QList <double> targetConc, QList <double> targetVolumes, double stockConcentration,QString inUnit, QString outUnit);
     bool allItemsEqual(QStringList list);
+    QList <double> calculateQuantities(QList<QString> wells,QList<double> concInUnits, QList<double> volumes, double stockCIn, QString inUnit, QString outUnit, QString volumeUnit);
+
 private:
 
-    QList <double> calculateQuantities(QList<QString> wells,QList <double> conc, QList <double> volumes, double stockC, QString inUnit, QString outUnit);
     QList <double> targetConcentrations;
     QList <double> targetVolumes;
 

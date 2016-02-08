@@ -14,7 +14,7 @@ public:
     enum Fields {WELL_NAME, DILUTION, SAMPLE, BUFFER, QUANTITY, CONC_UNIT, STOCK_VOLUME, VOLUME, VOLUME_UNIT, STOCK_CONC };
     Fields fields;
     ModQSortProxyModel(QObject *parent=0);
-
+    QString outputUnit;
        int i;
     ~ModQSortProxyModel();
     bool	setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);

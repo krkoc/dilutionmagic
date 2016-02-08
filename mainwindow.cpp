@@ -10,19 +10,17 @@
 MainWindow::MainWindow()
 {
     Converter conv;
-    conv.convert(100,"mg/ml","ng/ul");
+
     workInProgress=false;
     model = new Model(this);
-
     textEdit = new QPlainTextEdit;
     selectionWidget= new SelectionWidget;
     selectionWidget->setMinimumWidth(300);
     selectionWidget->setMaximumWidth(800);
-
     selectionWidget->setSourceModel(model->createMailModel(selectionWidget));
     definer = new DilutionDefiner(selectionWidget->proxyModel);
-    definer->setMinimumWidth(220);
-    definer->setMaximumWidth(220);
+    definer->setMinimumWidth(320);
+    //definer->setMaximumWidth(220);
     plateView = new PlateView(selectionWidget->proxyModel,this) ;
     plateView->setMinimumSize(600,500);
     setCentralWidget(plateView);
@@ -37,7 +35,7 @@ MainWindow::MainWindow()
     connect(definer->ui->applyButton,SIGNAL(clicked()),plateView,SLOT(updateColors()));
     connect(definer->ui->calculateButton,SIGNAL(clicked()),selectionWidget,SLOT( calculatePipetingProcedure()));
     connect(definer,SIGNAL(calculateQuantitiesParams(byte,double,double)),selectionWidget,SLOT(fillSelection(byte, double, double)));
-   // connect(definer->proxyModel,SIGNAL(modelModified()),this,SLOT(setWorkInProgress()));
+    //connect(definer->proxyModel,SIGNAL(modelModified()),this,SLOT(setWorkInProgress()));
     connect(plateView,SIGNAL(searchString(QString)),selectionWidget,SLOT(textFilterChanged(QString)));
     connect(selectionWidget->calc,SIGNAL(sendCalculationResults(QString)),this,SLOT(getCalculationResults(QString)));
 }
@@ -278,8 +276,7 @@ void MainWindow::getCalculationResults(QString text)
 
 void MainWindow::createActions()
 {
-    newLetterAct = new QAction(QIcon(":/images/new.png"), tr("&New Plate"),
-                               this);
+    newLetterAct = new QAction(QIcon(":/images/new.png"), tr("&New Plate"),this);
     newLetterAct->setShortcuts(QKeySequence::New);
     newLetterAct->setStatusTip(tr("Create a new plate"));
     connect(newLetterAct, SIGNAL(triggered()), this, SLOT(newLetter()));
@@ -314,10 +311,9 @@ void MainWindow::createMenus()
     fileMenu->addAction(newLetterAct);
     fileMenu->addAction(saveAct);
     fileMenu->addAction(openAct);
-     fileMenu->addSeparator();
+    fileMenu->addSeparator();
     fileMenu->addAction(quitAct);
-  //  editMenu = menuBar()->addMenu(tr("&Edit"));
-
+    //  editMenu = menuBar()->addMenu(tr("&Edit"));
     viewMenu = menuBar()->addMenu(tr("&View"));
     menuBar()->addSeparator();
     helpMenu = menuBar()->addMenu(tr("&About"));
@@ -330,9 +326,6 @@ void MainWindow::createToolBars()
     fileToolBar->addAction(newLetterAct);
     fileToolBar->addAction(saveAct);
     fileToolBar->addAction(openAct);
-
-  // editToolBar = addToolBar(tr("Edit"));
-
 }
 
 //! [8]

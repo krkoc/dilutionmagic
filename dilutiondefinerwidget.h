@@ -11,7 +11,6 @@ class DilutionDefiner;
 }
 
 
-
 class DilutionDefiner : public QWidget
 {
     Q_OBJECT

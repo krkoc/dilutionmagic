@@ -9,7 +9,6 @@ Model::Model(QObject *parent) : QObject(parent)
 
 }
 
-
 void Model::setEntry(QStandardItemModel *model, const QString &subject,
              const QString &sender, const double &conc, int index)
 {
@@ -17,9 +16,6 @@ void Model::setEntry(QStandardItemModel *model, const QString &subject,
    // model->setData(model->index(index, 1), sender);
     //model->setData(model->index(index, 2), conc);
 }
-
-
-
 
 QStandardItemModel *Model::createMailModel(QObject *parent)
 {
