@@ -155,7 +155,14 @@ void SelectionWidget::fillSelection(byte mode, double minVal, double maxVal)
     qDebug()<<"maxVal"<<maxVal;
     double step;
     if (indexList.length()==0) return;
-    step= (maxVal-minVal)/(indexList.length()-1);
+    if (indexList.length()==1)
+    {
+        step=0;
+    }
+    else if (indexList.length()>1)
+    {
+        step= (maxVal-minVal)/(indexList.length()-1);
+    }
 
     int i=0;
     if (mode==1){

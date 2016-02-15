@@ -18,6 +18,9 @@ bool Calculator::allItemsEqual(QStringList list)
 
 QList <double> Calculator::calculateQuantities(QList<QString> wells,QList<double> conc, QList<double> volumes, double stockC, QString inUnit, QString outUnit, QString volumeUnit)
 {
+    //first calculate that all fields are valid and have common:
+    //dilution name,sample name buffer name , stock concentration unit?, output concentration unit?
+
     this->targetConcentrations=conc;
     this->targetVolumes=volumes;
     this->stockConcentration=stockC;
@@ -25,6 +28,10 @@ QList <double> Calculator::calculateQuantities(QList<QString> wells,QList<double
     QString commonOutputUnit=converter.getCommonUnit(outUnit); //will return "g/L" or "M" depending on unit type
     QString commonInUnit=converter.getCommonUnit(inUnit); //will return "g/L" or "M" depending on unit type
 
+//    if (!dilutionParametersCompatible()){
+//        QMessageBox::warning(this, tr("Ooops!"),
+//                      "Your sample concentration ("+ QString::number(conc.at(0)) + ") is \n greater than stock concentration(" +QString::number(stockC) + ")!" );
+//    }
     qDebug()<<"calculatequantities";
     if (conc.at(0)>stockC ){
         QMessageBox::warning(this, tr("Ooops!"),

@@ -39,7 +39,6 @@ DilutionDefiner::DilutionDefiner(ModQSortProxyModel *proxy, QWidget *parent) :
     ui->outputUnitCombo->addItem("uM");
     ui->outputUnitCombo->addItem("nM");
     ui->outputUnitCombo->addItem("pM");
-
 }
 
 DilutionDefiner::~DilutionDefiner()
