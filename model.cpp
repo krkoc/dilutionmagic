@@ -1,12 +1,14 @@
-#include "model.h"
+
 #include <QObject>
 #include <QDebug>
+#include "converter.h"
+#include "model.h"
+
 
 Model::Model(QObject *parent) : QObject(parent)
 {
     model = new QStandardItemModel;
-    headers<<"Well"<<"Dilution_name"<<"Sample"<<"Buffer"<<"Concentration"<<"Concunits"<<"Stock_volume"<<"Well_volume"<<"Volume_units"<<"Stock_conc";
-
+    headers<<"Well"<<"Dilution_name"<<"Sample"<<"Buffer"<<"Concentration"<<"Concunits"<<"Stock_volume"<<"Buffer_volume"<<"Well_volume"<<"Volume_units"<<"Stock_conc";
 }
 
 void Model::setEntry(QStandardItemModel *model, const QString &subject,
@@ -19,7 +21,9 @@ void Model::setEntry(QStandardItemModel *model, const QString &subject,
 
 QStandardItemModel *Model::createMailModel(QObject *parent)
 {
-    model = new QStandardItemModel(96, 10, parent);
+
+    model = new QStandardItemModel(96, headers.length(), parent);
+
     int colCount = model->columnCount();
     QStringList modHdr;
     modHdr=headers.replaceInStrings("_"," ");
@@ -27,9 +31,6 @@ QStandardItemModel *Model::createMailModel(QObject *parent)
 
         model->setHeaderData(i, Qt::Horizontal,modHdr.at(i));
     }
-
-
-
     //A
     model->setData(model->index(0,0),"A1");     model->setData(model->index(1,0),"A2");     model->setData(model->index(2,0),"A3");
     model->setData(model->index(3,0),"A4");     model->setData(model->index(4,0),"A5");    model->setData(model->index(5,0),"A6");
@@ -70,10 +71,39 @@ QStandardItemModel *Model::createMailModel(QObject *parent)
     model->setData(model->index(84,0),"H1");    model->setData(model->index(85,0),"H2");    model->setData(model->index(86,0),"H3");
     model->setData(model->index(87,0),"H4");    model->setData(model->index(88,0),"H5");    model->setData(model->index(89,0),"H6");
     model->setData(model->index(90,0),"H7");    model->setData(model->index(91,0),"H8");    model->setData(model->index(92,0),"H9");
-    model->setData(model->index(93,0),"H_10");    model->setData(model->index(94,0),"H_11");    model->setData(model->index(95,0),"H_12");
+    model->setData(model->index(93,0),"H_10");  model->setData(model->index(94,0),"H_11");    model->setData(model->index(95,0),"H_12");
+    connect(model,SIGNAL(itemChanged(QStandardItem*)  ),this ,SLOT(updateLine(QStandardItem*)));
 
     return model;
 }
 
 
+
+void Model::updateLine(QStandardItem *item)
+{
+    //this function gets called when the model changes
+    qDebug()<<"updateLIne";
+    qDebug()<<"indexfromitem"<<item->index().row();
+    double val,sampleConcentration,stockConcentration,NativeUnits,vol;
+    //QString sampleUnitType=Converter::getUnitType(model->data( model->index(item->row(),CONC_UNIT ),Qt::DisplayRole ).toString());
+    QString sampleConcUnit=(model->data( model->index(item->row(),CONC_UNIT ),Qt::DisplayRole )).toString();
+    QString stockConcUnit=(model->data( model->index(item->row(),STOCK_CONC ),Qt::DisplayRole )).toString();
+
+    if ((sampleConcUnit!="")  &&  (stockConcUnit!="")){
+        //QString sampleUnitType = Converter::getUnitType(sampleConcUnit);
+        //QString stockUnitType = Converter::getUnitType(stockConcUnit);
+//        if (sampleUnitType==stockUnitType){
+//            sampleConcentration=model->data( model->index(item->row(),QUANTITY),Qt::DisplayRole ).toDouble();
+
+//            stockConcentration=model->data(model->index(item->row(),STOCK_CONC),Qt::DisplayRole ).toDouble();
+//            //double stockConcInSapleUnits = Converter::convert(stockConcentration,)
+//            //QString inUnit=model->data( model->index(item->row(),CONC_UNIT),Qt::DisplayRole ).toDouble();
+//            //vol=model->data(model->index(item->row(),VOLUME),Qt::DisplayRole ).toDouble();
+//            if (stockConcentration>0)
+//                val=sampleConcentration/stockConcentration*vol;
+//        }
+    }
+    //model->setData(model->index(item->row(),STOCK_VOLUME),val); //6=Stockvoluem
+
+}
 

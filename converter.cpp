@@ -1,6 +1,16 @@
 #include <QDebug>
 #include <QtMath>
+#include <QMap>
 #include "converter.h"
+
+static QMap <QString, double> unitMassMap;
+static  QMap <QString, double> unitVolMap;
+static QMap <QString, double> unitMolMap;
+static QMap <QString, int> unitTypeToConversionMatrixDictionary;
+static double conversionFactorMatrix [2][2]; //conversion factors for moving through variables
+
+
+double Converter::molarMass=1;
 
 
 Converter::Converter(QObject *parent) : QObject(parent)
@@ -110,7 +120,6 @@ double Converter::commonMolarity(double conc, QString unit, QString direction)
     QString volUnit;
     double quantity;
     molar=unit.left(2); //returns "M" or "uM" or "uM"...
-    qDebug()<<"molar in commonMolarity:"<<molar;
     volUnit="L";
     if (direction =="Forward"){
         quantity=conc *unitMolMap[molar]/unitVolMap[volUnit]; //negative quantity means missing data
@@ -129,8 +138,6 @@ double Converter::getConversionFactor(QString unitIn, QString unitOut)
     int row, column;
     commonUnitIn=getUnitType(unitIn);
     commonUnitOut=getUnitType(unitOut);
-    qDebug()<<"commonUnitIn"<<commonUnitIn;
-    qDebug()<<"commonUnitOut"<<commonUnitOut;
     column=unitTypeToConversionMatrixDictionary[commonUnitIn];
     row=unitTypeToConversionMatrixDictionary[commonUnitOut];
     return conversionFactorMatrix[column][row];
@@ -139,7 +146,6 @@ double Converter::getConversionFactor(QString unitIn, QString unitOut)
 
 double Converter::convert(double conc, QString inUnit, QString outUnit)
 {
-    qDebug()<<"starting convert";
     QString commonIn, commonOut;
     double conversionFactor;
     double commonConc;
@@ -217,6 +223,7 @@ double Converter::convertQuantityToUserQuantity(double quantity, QString unit)
     }
 }
 
+
 double Converter::convertUserQuantityToQuantity(double quantity, QString unit)
 {
     if (unit.contains("g",Qt::CaseSensitive))
@@ -228,6 +235,7 @@ double Converter::convertUserQuantityToQuantity(double quantity, QString unit)
         return convertUserMolarityToMol(quantity,unit);
     }
 }
+
 
 Converter::~Converter()
 {

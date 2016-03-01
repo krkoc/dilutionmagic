@@ -1,5 +1,6 @@
 #include "dilutiondefinerwidget.h"
 #include "ui_dilutiondefiner.h"
+#include "converter.h"
 
 
 DilutionDefiner::DilutionDefiner(ModQSortProxyModel *proxy, QWidget *parent) :
@@ -58,8 +59,11 @@ void DilutionDefiner::slotToEmitQuantities()
         proxyModel->setData(proxyModel->index(i,proxyModel->VOLUME),ui->totalVolumeSpin->value());
         proxyModel->setData(proxyModel->index(i,proxyModel->VOLUME_UNIT),ui-> unitsVolCombo ->currentText());
         proxyModel->setData(proxyModel->index(i,proxyModel->STOCK_CONC), ui-> quantitySpin ->value());
+
     }
+
     proxyModel->outputUnit=ui->outputUnitCombo->currentText();
+    proxyModel->molarMass=ui->molarMassSpinBox->value();
     if ((ui->radioLinear->isChecked()==false) && ui->minValueSpin->value()==0){
         QMessageBox::warning(this, tr("Oooops!"),
                              tr("Can not start with zero with the log option"));

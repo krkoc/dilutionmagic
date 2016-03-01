@@ -6,6 +6,8 @@
 class Model : public QObject
 {
     Q_OBJECT
+    enum Fields {WELL_NAME, DILUTION, SAMPLE, BUFFER, QUANTITY, CONC_UNIT, STOCK_VOLUME, BUFFER_VOLUME,VOLUME, VOLUME_UNIT, STOCK_CONC };
+    Fields fields;
 public:
     explicit Model(QObject * parent=0);
     QStandardItemModel *model;
@@ -22,6 +24,7 @@ signals:
 
 public slots:
 
+ void updateLine(QStandardItem*);
 
 };
 

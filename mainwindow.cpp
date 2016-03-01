@@ -9,7 +9,7 @@
 
 MainWindow::MainWindow()
 {
-    Converter conv;
+
 
     workInProgress=false;
     model = new Model(this);
@@ -20,8 +20,9 @@ MainWindow::MainWindow()
     selectionWidget->setSourceModel(model->createMailModel(selectionWidget));
     definer = new DilutionDefiner(selectionWidget->proxyModel);
     definer->setMinimumWidth(320);
-    //definer->setMaximumWidth(220);
     plateView = new PlateView(selectionWidget->proxyModel,this) ;
+
+
     plateView->setMinimumSize(600,500);
     setCentralWidget(plateView);
     createActions();
@@ -33,6 +34,7 @@ MainWindow::MainWindow()
     //newLetter();
     setUnifiedTitleAndToolBarOnMac(true);
     connect(definer->ui->applyButton,SIGNAL(clicked()),plateView,SLOT(updateColors()));
+
     connect(definer->ui->calculateButton,SIGNAL(clicked()),selectionWidget,SLOT( calculatePipetingProcedure()));
     connect(definer,SIGNAL(calculateQuantitiesParams(byte,double,double)),selectionWidget,SLOT(fillSelection(byte, double, double)));
     //connect(definer->proxyModel,SIGNAL(modelModified()),this,SLOT(setWorkInProgress()));

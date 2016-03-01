@@ -12,30 +12,25 @@ public:
     explicit Converter(QObject *parent = 0);
     explicit Converter(QString inUnits, QString outUnits, QObject *parent = 0);
     ~Converter();
-    QString  getUnitType(QString units);
-    double   commonMassperVol(double conc, QString unit, QString direction="Forward");
-    double   commonMolarity(double conc, QString unit, QString direction="Forward");
-    double   getConversionFactor(QString unitIn, QString unitOut);
-    double   convert(double conc, QString inUnit, QString outUnit);
-    double   convertUserVolumeUnitsToLiter(double volume, QString unit);
-    double   convertLiterToUserVolumeUnits(double volume, QString unit);
-    double   convertUserUnitsToGramms(double mass, QString unit);
-    double   convertGrammsToUserUnits(double mass, QString unit);
-    double   convertMolToUserMolarity(double molarity, QString unit);
-    double   convertUserMolarityToMol(double molarity, QString unit);
-    double   convertQuantityToUserQuantity(double quantity, QString unit);
-    double   convertUserQuantityToQuantity(double quantity, QString unit);
-    QString  getQuantityUnit(QString unit);
-    QString  getCommonUnit(QString unit);
 
-    double molarMass=-2;
+    static QString  getUnitType(QString units);
+    static double   commonMassperVol(double conc, QString unit, QString direction="Forward");
+    static double   commonMolarity(double conc, QString unit, QString direction="Forward");
+    static double   getConversionFactor(QString unitIn, QString unitOut);
+    static double   convert(double conc, QString inUnit, QString outUnit);
+    static double   convertUserVolumeUnitsToLiter(double volume, QString unit);
+    static double   convertLiterToUserVolumeUnits(double volume, QString unit);
+    static double   convertUserUnitsToGramms(double mass, QString unit);
+    static double   convertGrammsToUserUnits(double mass, QString unit);
+    static double   convertMolToUserMolarity(double molarity, QString unit);
+    static double   convertUserMolarityToMol(double molarity, QString unit);
+    static double   convertQuantityToUserQuantity(double quantity, QString unit);
+    static double   convertUserQuantityToQuantity(double quantity, QString unit);
 
-private:
-     QMap <QString, double> unitMassMap;
-     QMap <QString, double> unitVolMap;
-     QMap <QString, double> unitMolMap;
-     QMap <QString, int> unitTypeToConversionMatrixDictionary;
-     double conversionFactorMatrix [2][2]; //conversion factors for moving through variables
+    static QString  getQuantityUnit(QString unit);
+    static QString  getCommonUnit(QString unit);
+    static double molarMass;
+
 
 
 signals:

@@ -38,6 +38,9 @@
 **
 ****************************************************************************/
 
+
+
+
 #ifndef SELECTIONWIDGET_H
 #define SELECTIONWIDGET_H
 
@@ -75,10 +78,11 @@ public:
 
 private slots:
     void textFilterChanged(QString);
-    void dateFilterChanged();
     void calculatePipetingProcedure();
     void fillSelection(byte, double, double);
     void printChange();
+
+
 private:
 
     QGroupBox *sourceGroupBox;

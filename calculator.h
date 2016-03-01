@@ -15,7 +15,7 @@ public:
     QList <double> intermSolVolumes;
     double stockConcentration;
     bool allItemsEqual(QStringList list);
-    QList <double> calculateQuantities(QList<QString> wells,QList<double> concInUnits, QList<double> volumes, double stockCIn, QString inUnit, QString outUnit, QString volumeUnit);
+    QList <double> calculateQuantities(QList<QString> wells,QList<double> concInUnits, QList<double> volumes, double stockCIn, QString inUnit, QString outUnit, QString volumeUnit, double molarMass);
 
 private:
 

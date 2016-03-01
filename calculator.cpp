@@ -16,15 +16,19 @@ bool Calculator::allItemsEqual(QStringList list)
 }
 
 
-QList <double> Calculator::calculateQuantities(QList<QString> wells,QList<double> conc, QList<double> volumes, double stockC, QString inUnit, QString outUnit, QString volumeUnit)
+QList <double> Calculator::calculateQuantities(QList<QString> wells,QList<double> conc, QList<double> volumes, double stockC, QString inUnit, QString outUnit, QString volumeUnit, double molarMass)
 {
+
     //first calculate that all fields are valid and have common:
     //dilution name,sample name buffer name , stock concentration unit?, output concentration unit?
 
     this->targetConcentrations=conc;
     this->targetVolumes=volumes;
     this->stockConcentration=stockC;
+    Converter::molarMass=molarMass;
     Converter converter;
+
+    qDebug()<<"molarMass"<<Converter::molarMass;
     QString commonOutputUnit=converter.getCommonUnit(outUnit); //will return "g/L" or "M" depending on unit type
     QString commonInUnit=converter.getCommonUnit(inUnit); //will return "g/L" or "M" depending on unit type
 
@@ -33,15 +37,10 @@ QList <double> Calculator::calculateQuantities(QList<QString> wells,QList<double
 //                      "Your sample concentration ("+ QString::number(conc.at(0)) + ") is \n greater than stock concentration(" +QString::number(stockC) + ")!" );
 //    }
     qDebug()<<"calculatequantities";
-    if (conc.at(0)>stockC ){
+    if (conc.at(0) > stockC ){
         QMessageBox::warning(this, tr("Ooops!"),
                       "Your sample concentration ("+ QString::number(conc.at(0)) + ") is \n greater than stock concentration(" +QString::number(stockC) + ")!" );
     }
-    if (commonOutputUnit !=commonInUnit){
-        QMessageBox::warning(this, tr("Ooops!"),
-                      "Your sample input unit is " + commonInUnit + "but the output unit is" + commonOutputUnit + " they must be equal");
-    }
-
 
 
     //first calculate the quantity
@@ -50,7 +49,7 @@ QList <double> Calculator::calculateQuantities(QList<QString> wells,QList<double
     QString result;
     double Q=0; //total quantity
     double V;
-  for (int i=0; i< conc.length(); i++)
+    for (int i=0; i< conc.length(); i++)
     {
         //calculate the quantity to the common unit (mass or moles)
         double concC=converter.convert(conc.at(i),outUnit,commonOutputUnit);            // conc in common units
@@ -73,38 +72,49 @@ QList <double> Calculator::calculateQuantities(QList<QString> wells,QList<double
     result.append(userQuantityUnit+"\n");
 
     double stockCInCommonUnits = converter.convert(stockC,inUnit,commonOutputUnit); //"g/L" or "moles/L"
-    //result.append("\n stock in common units" + QString::number(stockCInCommonUnits) );
-
 
     double volInCommonUnits=Q/stockCInCommonUnits; //because Q is in common units
     //result.append("\n vol in common units" + QString::number(volInCommonUnits) );
 
     //now we convert this volume in liters to our output volume units
     V=converter.convertLiterToUserVolumeUnits(volInCommonUnits,volumeUnit);
+
     result.append("You will need  ");
     result.append(QString::number(V)+volumeUnit);
-
     result.append(" of stock solution.\n");
     double ivCommon, iv;
-
     //---------------------------------------------------
     //intermediate volume at max concentration
-    ivCommon=(Q/converter.convert(conc.at(0),inUnit, commonInUnit)); //in unit is the stock conc unit, calc it to common because Q is in common
+    ivCommon=(Q/converter.convert(conc.at(0), outUnit,commonInUnit)); //in unit is the stock conc unit, calc it to common because Q is in common
+    qDebug()<<"ivCommon "<<ivCommon;
+    qDebug()<<"commonInUnit "<<commonInUnit;
+    qDebug()<<"conc in common"<<converter.convert(conc.at(0), inUnit,commonInUnit);
+    qDebug()<<"inUnit "<<inUnit;
+
     //ivCommon is now in Litres..convert it to output units
     iv=converter.convertLiterToUserVolumeUnits(ivCommon,volumeUnit);
+    qDebug()<<"iv "<<iv;
+    qDebug()<<"volumeUnit "<<volumeUnit;
+
     intermSolVolumes.append(iv);
+    qDebug()<<"iv common "<<ivCommon;
+    qDebug()<<"iv  "<<iv;
+    qDebug()<<"volumeUnit "<<volumeUnit;
     //add iv-V buffer to get to iv.
     result.append("Add ");
+
+
     result.append(QString::number(iv-V)+volumeUnit);
+    if (V > iv ){
+        QMessageBox::warning(this, tr("Ooops!"),
+                      "Your stock concentration is too small. Continue only if you can handle negative volumes ;)" );
+    }
     result.append(" of buffer to get to the total volume of " +QString::number(iv)+volumeUnit+  " for all dilutions. ");
     result.append("\n");
     result.append("Now: ");
     result.append("\n");
-
-
     for (int i=1; i <conc.length();i++)
     {
-
         iv=( converter.convert(targetConcentrations.at(i-1),inUnit, outUnit)*(intermSolVolumes.last()-targetVolumes.at(i-1))/converter.convert(targetConcentrations.at(i),inUnit, outUnit));
         if (targetConcentrations.at(i)==0) iv=0;
         intermSolVolumes.append(iv);

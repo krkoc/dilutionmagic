@@ -96,13 +96,8 @@ void SelectionWidget::textFilterChanged(QString st)
     proxyView->selectColumn(0);
     proxyModel->sort(proxyModel->WELL_NAME,Qt::AscendingOrder);
 }
-//! [8]
 
 
-void SelectionWidget::dateFilterChanged()
-{
-
-}
 
 void SelectionWidget::calculatePipetingProcedure()
 {
@@ -123,27 +118,26 @@ void SelectionWidget::calculatePipetingProcedure()
     double stockConcentration;
 
     for (int i=0; i<stdm->rowCount();i++){
-      conc=stdm->data(stdm->index(i,proxyModel->QUANTITY),Qt::DisplayRole);
-      vol=stdm-> data(stdm->index(i,proxyModel->VOLUME),Qt::DisplayRole);
-      well=stdm->data(stdm->index(i,proxyModel->WELL_NAME),Qt::DisplayRole);
+        conc=stdm->data(stdm->index(i,proxyModel->QUANTITY),Qt::DisplayRole);
+        vol=stdm-> data(stdm->index(i,proxyModel->VOLUME),Qt::DisplayRole);
+        well=stdm->data(stdm->index(i,proxyModel->WELL_NAME),Qt::DisplayRole);
 
-      concUnitList.append(stdm->data(stdm->index(i,proxyModel->CONC_UNIT),Qt::DisplayRole)); //list concentrations
-      volUnitList.append(stdm->data(stdm->index(i,proxyModel->VOLUME_UNIT),Qt::DisplayRole));
-      stockConcentrationList.append(stdm->data(stdm->index(i,proxyModel->STOCK_CONC),Qt::DisplayRole));
+        concUnitList.append(stdm->data(stdm->index(i,proxyModel->CONC_UNIT),Qt::DisplayRole)); //list concentrations
+        volUnitList.append(stdm->data(stdm->index(i,proxyModel->VOLUME_UNIT),Qt::DisplayRole));
+        stockConcentrationList.append(stdm->data(stdm->index(i,proxyModel->STOCK_CONC),Qt::DisplayRole));
 
-      concentrations.append(conc.toDouble());
-      volumes.append(vol.toDouble());
-      wells.append(well.toString());
+        concentrations.append(conc.toDouble());
+        volumes.append(vol.toDouble());
+        wells.append(well.toString());
     }
     stockConcentration = stockConcentrationList.first().toDouble(); //cheating
     volUnit=volUnitList.first().toString(); //cheating
     concUnit=concUnitList.first().toString(); //cheating
     //modyfit to set a nominal concentration for all samples or check equality
-
-    calc->calculateQuantities(wells, concentrations, volumes, stockConcentration, concUnit , proxyModel->outputUnit, volUnit);
-
+    calc->calculateQuantities(wells, concentrations, volumes, stockConcentration, concUnit , proxyModel->outputUnit, volUnit, proxyModel->molarMass);
     proxyModel->sort(proxyModel->WELL_NAME,SortOrder);  //sort by name again
 }
+
 
 
 void SelectionWidget::fillSelection(byte mode, double minVal, double maxVal)
@@ -167,21 +161,21 @@ void SelectionWidget::fillSelection(byte mode, double minVal, double maxVal)
     int i=0;
     if (mode==1){
         qDebug()<<"linear mode is set";
-    foreach (QModelIndex index, indexList){
-        proxyModel->setData(proxyModel->index(index.row(),proxyModel->QUANTITY),minVal+i*step);
-        i++;
-    }
+        foreach (QModelIndex index, indexList){
+            proxyModel->setData(proxyModel->index(index.row(),proxyModel->QUANTITY),minVal+i*step);
+
+            i++;
+        }
     }
     else {
         qDebug()<<"exponential mode is set";
         double factor=qPow(maxVal/minVal,1/(double)(indexList.count()-1));
         qDebug()<<"factor"<<factor;
         foreach (QModelIndex index, indexList){
-        proxyModel->setData(proxyModel->index(index.row(),proxyModel->QUANTITY),minVal*qPow(factor,i));
-        i++;
+            proxyModel->setData(proxyModel->index(index.row(),proxyModel->QUANTITY),minVal*qPow(factor,i));
+            i++;
         }
     }
-
 }
 
-//! [9]
+
