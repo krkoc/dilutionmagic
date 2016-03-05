@@ -9,7 +9,9 @@
 
 MainWindow::MainWindow()
 {
-
+    Converter converter;
+    converter.molarMass=1000;
+    qDebug()<<"converting.... "<<converter.convert(1,"ng/ul","mM");
 
     workInProgress=false;
     model = new Model(this);

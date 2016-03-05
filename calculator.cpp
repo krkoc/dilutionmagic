@@ -85,7 +85,8 @@ QList <double> Calculator::calculateQuantities(QList<QString> wells,QList<double
     double ivCommon, iv;
     //---------------------------------------------------
     //intermediate volume at max concentration
-    ivCommon=(Q/converter.convert(conc.at(0), outUnit,commonInUnit)); //in unit is the stock conc unit, calc it to common because Q is in common
+    ivCommon=(Q/converter.convert(conc.at(0), outUnit,commonOutputUnit)); //in unit is the stock conc unit, calc it to common because Q is in common
+    qDebug()<<"outUnit "<<outUnit;
     qDebug()<<"ivCommon "<<ivCommon;
     qDebug()<<"commonInUnit "<<commonInUnit;
     qDebug()<<"conc in common"<<converter.convert(conc.at(0), inUnit,commonInUnit);

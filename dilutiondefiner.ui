@@ -31,7 +31,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>281</width>
+     <width>311</width>
      <height>231</height>
     </rect>
    </property>
@@ -232,7 +232,14 @@
        </spacer>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="molarMassSpinBox"/>
+       <widget class="QDoubleSpinBox" name="molarMassSpinBox">
+        <property name="minimum">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>999999.989999999990687</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_9">

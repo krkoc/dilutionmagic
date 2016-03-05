@@ -39,8 +39,8 @@ Converter::Converter(QObject *parent) : QObject(parent)
 
     //define conversion matrix:
     conversionFactorMatrix[0][0]=1;            //from x1g/y1L -> x2g/y2L
-    conversionFactorMatrix[0][1]=molarMass;    //from x mol/L  - y g/L
-    conversionFactorMatrix[1][0]=1/molarMass;  //from  x g/L - y mol/L
+    conversionFactorMatrix[0][1]=2;    //from x mol/L  - y g/L
+    conversionFactorMatrix[1][0]=1/2;  //from  x g/L - y mol/L
     conversionFactorMatrix[1][1]=1;            //from x1g/y1L -> x2g/y2L
 }
 
@@ -135,12 +135,17 @@ double Converter::commonMolarity(double conc, QString unit, QString direction)
 double Converter::getConversionFactor(QString unitIn, QString unitOut)
 {
     QString commonUnitIn, commonUnitOut;
+    conversionFactorMatrix[0][1]=1/molarMass;    //from x mol/L  - y g/L
+    conversionFactorMatrix[1][0]=molarMass;  //from  x g/L - y mol/L
+
     int row, column;
     commonUnitIn=getUnitType(unitIn);
     commonUnitOut=getUnitType(unitOut);
     column=unitTypeToConversionMatrixDictionary[commonUnitIn];
     row=unitTypeToConversionMatrixDictionary[commonUnitOut];
+    qDebug()<<"getConversionFactor return"<<conversionFactorMatrix[column][row]<<"r: "<<row<<"c: "<<column;
     return conversionFactorMatrix[column][row];
+
 }
 
 
