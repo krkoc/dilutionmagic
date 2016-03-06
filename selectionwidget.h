@@ -49,6 +49,7 @@
 #include <QtWidgets>
 #include "modqsortproxymodel.h"
 #include "calculator.h"
+#include "model.h"
 
 
 class QStandardItemModel;

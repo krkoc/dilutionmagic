@@ -49,16 +49,18 @@ DilutionDefiner::~DilutionDefiner()
 
 void DilutionDefiner::slotToEmitQuantities()
 {
+
     qDebug()<<"dilutionDefinerWidget::calculateQuantities-slot";
     //emit sendSolutionName(ui->solutionNameCombo->currentText());
     for (int i=0; i<proxyModel->rowCount();i++){
-        proxyModel->setData(proxyModel->index(i,proxyModel->DILUTION),ui->dilutionNameCombo->currentText());
-        proxyModel->setData(proxyModel->index(i,proxyModel->SAMPLE),ui->sampleNameCombo->currentText());
-        proxyModel->setData(proxyModel->index(i,proxyModel->BUFFER),ui->bufferNameCombo->currentText());
-        proxyModel->setData(proxyModel->index(i,proxyModel->CONC_UNIT),ui->unitsConcCombo->currentText());
-        proxyModel->setData(proxyModel->index(i,proxyModel->VOLUME),ui->totalVolumeSpin->value());
-        proxyModel->setData(proxyModel->index(i,proxyModel->VOLUME_UNIT),ui-> unitsVolCombo ->currentText());
-        proxyModel->setData(proxyModel->index(i,proxyModel->STOCK_CONC), ui-> quantitySpin ->value());
+        proxyModel->setData(proxyModel->index(i,Model::DILUTION),ui->dilutionNameCombo->currentText());
+        proxyModel->setData(proxyModel->index(i,Model::SAMPLE),ui->sampleNameCombo->currentText());
+        proxyModel->setData(proxyModel->index(i,Model::BUFFER),ui->bufferNameCombo->currentText());
+        proxyModel->setData(proxyModel->index(i,Model::STOCK_CONC_UNITS),ui->unitsConcCombo->currentText());
+        proxyModel->setData(proxyModel->index(i,Model::VOLUME),ui->totalVolumeSpin->value());
+        proxyModel->setData(proxyModel->index(i,Model::VOLUME_UNIT),ui-> unitsVolCombo ->currentText());
+        proxyModel->setData(proxyModel->index(i,Model::STOCK_CONC), ui-> quantitySpin ->value());
+        proxyModel->setData(proxyModel->index(i,Model::CONC_UNIT), ui->outputUnitCombo ->currentText());
 
     }
 

@@ -5,10 +5,12 @@
 #include "model.h"
 
 
+static Model::Fields fields;
+
 Model::Model(QObject *parent) : QObject(parent)
 {
     model = new QStandardItemModel;
-    headers<<"Well"<<"Dilution_name"<<"Sample"<<"Buffer"<<"Concentration"<<"Concunits"<<"Stock_volume"<<"Buffer_volume"<<"Well_volume"<<"Volume_units"<<"Stock_conc";
+    headers<<"Well"<<"Dilution_name"<<"Sample"<<"Buffer"<<"Concentration"<<"Concunits"<<"Stock_volume"<<"Buffer_volume"<<"Well_volume"<<"Volume_units"<<"Stock_conc"<<"Stock_conc_units";
 }
 
 void Model::setEntry(QStandardItemModel *model, const QString &subject,
@@ -85,25 +87,24 @@ void Model::updateLine(QStandardItem *item)
     qDebug()<<"updateLIne";
     qDebug()<<"indexfromitem"<<item->index().row();
     double val,sampleConcentration,stockConcentration,NativeUnits,vol;
-    //QString sampleUnitType=Converter::getUnitType(model->data( model->index(item->row(),CONC_UNIT ),Qt::DisplayRole ).toString());
+    Converter converter;
     QString sampleConcUnit=(model->data( model->index(item->row(),CONC_UNIT ),Qt::DisplayRole )).toString();
-    QString stockConcUnit=(model->data( model->index(item->row(),STOCK_CONC ),Qt::DisplayRole )).toString();
+
+    QString stockConcUnit=(model->data( model->index(item->row(),STOCK_CONC_UNITS ),Qt::DisplayRole )).toString();
 
     if ((sampleConcUnit!="")  &&  (stockConcUnit!="")){
-        //QString sampleUnitType = Converter::getUnitType(sampleConcUnit);
-        //QString stockUnitType = Converter::getUnitType(stockConcUnit);
-//        if (sampleUnitType==stockUnitType){
-//            sampleConcentration=model->data( model->index(item->row(),QUANTITY),Qt::DisplayRole ).toDouble();
+        sampleConcentration=model->data( model->index(item->row(),QUANTITY),Qt::DisplayRole ).toDouble();
+        stockConcentration=model->data(model->index(item->row(),STOCK_CONC),Qt::DisplayRole ).toDouble();
+//        //convert to the same units, lets choose of the sample
+       double stockConcInSampleUnits=Converter::convert(stockConcentration,stockConcUnit,sampleConcUnit);
+        vol=model->data(model->index(item->row(),VOLUME),Qt::DisplayRole ).toDouble();
+            if (stockConcentration>0)
+                val=sampleConcentration/stockConcInSampleUnits*vol;
+        model->setData(model->index(item->row(),STOCK_VOLUME),val); //6=Stockvoluem
+        model->setData(model->index(item->row(),BUFFER_VOLUME),vol-val);
 
-//            stockConcentration=model->data(model->index(item->row(),STOCK_CONC),Qt::DisplayRole ).toDouble();
-//            //double stockConcInSapleUnits = Converter::convert(stockConcentration,)
-//            //QString inUnit=model->data( model->index(item->row(),CONC_UNIT),Qt::DisplayRole ).toDouble();
-//            //vol=model->data(model->index(item->row(),VOLUME),Qt::DisplayRole ).toDouble();
-//            if (stockConcentration>0)
-//                val=sampleConcentration/stockConcentration*vol;
-//        }
     }
-    //model->setData(model->index(item->row(),STOCK_VOLUME),val); //6=Stockvoluem
 
 }
+
 

@@ -6,15 +6,16 @@
 class Model : public QObject
 {
     Q_OBJECT
-    enum Fields {WELL_NAME, DILUTION, SAMPLE, BUFFER, QUANTITY, CONC_UNIT, STOCK_VOLUME, BUFFER_VOLUME,VOLUME, VOLUME_UNIT, STOCK_CONC };
-    Fields fields;
+
 public:
     explicit Model(QObject * parent=0);
     QStandardItemModel *model;
     void setEntry(QStandardItemModel *model, const QString &subject,const QString &sender, const double &conc, int index);
     QStandardItemModel *createMailModel(QObject *parent);
     QStringList headers;
+    enum Fields {WELL_NAME, DILUTION, SAMPLE, BUFFER, QUANTITY, CONC_UNIT, STOCK_VOLUME, BUFFER_VOLUME,VOLUME, VOLUME_UNIT, STOCK_CONC, STOCK_CONC_UNITS };
 
+    static Fields fields;
 private:
 
 
@@ -25,6 +26,7 @@ signals:
 public slots:
 
  void updateLine(QStandardItem*);
+
 
 };
 

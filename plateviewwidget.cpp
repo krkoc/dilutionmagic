@@ -95,15 +95,15 @@ void PlateView::updateColors()
   QVariant max=(double)0.01;
 
   for (int i=0; i<stdm->rowCount();i++){
-    quantity=stdm->data(stdm->index(i, proxyModel->QUANTITY),Qt::DisplayRole);
+    quantity=stdm->data(stdm->index(i, Model::QUANTITY),Qt::DisplayRole);
     if (quantity.toDouble() > max.toDouble()) max=quantity;
   }
 
   for (int i=0; i<stdm->rowCount();i++){
 
-    quantity=stdm->data(stdm->index(i,proxyModel->QUANTITY),Qt::DisplayRole);
+    quantity=stdm->data(stdm->index(i,Model::QUANTITY),Qt::DisplayRole);
 
-    solutionName=stdm->data(stdm->index(i,proxyModel->DILUTION),Qt::DisplayRole);
+    solutionName=stdm->data(stdm->index(i,Model::DILUTION),Qt::DisplayRole);
     plateList.at(i)->wellColumnValue=QVariant(quantity.toDouble()* 100/max.toDouble()); //100 means percentage of max
     plateList.at(i)->wellSolutionName=solutionName;
     plateList.at(i)->update();

@@ -42,6 +42,7 @@ MainWindow::MainWindow()
     //connect(definer->proxyModel,SIGNAL(modelModified()),this,SLOT(setWorkInProgress()));
     connect(plateView,SIGNAL(searchString(QString)),selectionWidget,SLOT(textFilterChanged(QString)));
     connect(selectionWidget->calc,SIGNAL(sendCalculationResults(QString)),this,SLOT(getCalculationResults(QString)));
+    connect(definer->ui->applyButton,SIGNAL(clicked()),model,SLOT(updateLine(QStandardItem*)) );
 }
 
 //! [1]
@@ -107,26 +108,26 @@ void MainWindow::save()
     //WELL_NAME, DILUTION, SAMPLE, BUFFER, QUANTITY, UNIT, STOCK_VOLUME, VOLUME
     for (int i=0; i<stdm->rowCount();i++){
         QDomElement tag = doc.createElement("Well");
-        var=stdm->data(stdm->index(i,selectionWidget->proxyModel->WELL_NAME),Qt::DisplayRole);
-        tag.setAttribute(headerStringList.at( selectionWidget->proxyModel->WELL_NAME),var.toString());
-        var=stdm->data(stdm->index(i,selectionWidget->proxyModel->DILUTION),Qt::DisplayRole);
-        tag.setAttribute(headerStringList.at(selectionWidget->proxyModel->DILUTION),var.toString());
-        var=stdm->data(stdm->index(i,selectionWidget->proxyModel->SAMPLE),Qt::DisplayRole);
-        tag.setAttribute(headerStringList.at(selectionWidget->proxyModel->SAMPLE),var.toString());
-        var=stdm->data(stdm->index(i,selectionWidget->proxyModel->BUFFER),Qt::DisplayRole);
-        tag.setAttribute(headerStringList.at(selectionWidget->proxyModel->BUFFER),var.toString());
-        var=stdm->data(stdm->index(i,selectionWidget->proxyModel->QUANTITY),Qt::DisplayRole);
-        tag.setAttribute(headerStringList.at(selectionWidget->proxyModel->QUANTITY),var.toString());
-        var=stdm->data(stdm->index(i,selectionWidget->proxyModel->CONC_UNIT),Qt::DisplayRole);
-        tag.setAttribute(headerStringList.at(selectionWidget->proxyModel->CONC_UNIT),var.toString());
-        var=stdm->data(stdm->index(i,selectionWidget->proxyModel->STOCK_VOLUME),Qt::DisplayRole);
-        tag.setAttribute(headerStringList.at(selectionWidget->proxyModel->STOCK_VOLUME),var.toString());
-        var=stdm->data(stdm->index(i,selectionWidget->proxyModel->VOLUME),Qt::DisplayRole);
-        tag.setAttribute(headerStringList.at(selectionWidget->proxyModel->VOLUME),var.toString());
-        var=stdm->data(stdm->index(i,selectionWidget->proxyModel->VOLUME_UNIT ),Qt::DisplayRole);
-        tag.setAttribute(headerStringList.at(selectionWidget->proxyModel->VOLUME_UNIT),var.toString());
-        var=stdm->data(stdm->index(i,selectionWidget->proxyModel->CONC_UNIT),Qt::DisplayRole);
-        tag.setAttribute(headerStringList.at(selectionWidget->proxyModel->CONC_UNIT),var.toString());
+        var=stdm->data(stdm->index(i,Model::WELL_NAME),Qt::DisplayRole);
+        tag.setAttribute(headerStringList.at( Model::WELL_NAME),var.toString());
+        var=stdm->data(stdm->index(i,Model::DILUTION),Qt::DisplayRole);
+        tag.setAttribute(headerStringList.at(Model::DILUTION),var.toString());
+        var=stdm->data(stdm->index(i,Model::SAMPLE),Qt::DisplayRole);
+        tag.setAttribute(headerStringList.at(Model::SAMPLE),var.toString());
+        var=stdm->data(stdm->index(i,Model::BUFFER),Qt::DisplayRole);
+        tag.setAttribute(headerStringList.at(Model::BUFFER),var.toString());
+        var=stdm->data(stdm->index(i,Model::QUANTITY),Qt::DisplayRole);
+        tag.setAttribute(headerStringList.at(Model::QUANTITY),var.toString());
+        var=stdm->data(stdm->index(i,Model::CONC_UNIT),Qt::DisplayRole);
+        tag.setAttribute(headerStringList.at(Model::CONC_UNIT),var.toString());
+        var=stdm->data(stdm->index(i,Model::STOCK_VOLUME),Qt::DisplayRole);
+        tag.setAttribute(headerStringList.at(Model::STOCK_VOLUME),var.toString());
+        var=stdm->data(stdm->index(i,Model::VOLUME),Qt::DisplayRole);
+        tag.setAttribute(headerStringList.at(Model::VOLUME),var.toString());
+        var=stdm->data(stdm->index(i,Model::VOLUME_UNIT ),Qt::DisplayRole);
+        tag.setAttribute(headerStringList.at(Model::VOLUME_UNIT),var.toString());
+        var=stdm->data(stdm->index(i,Model::CONC_UNIT),Qt::DisplayRole);
+        tag.setAttribute(headerStringList.at(Model::CONC_UNIT),var.toString());
         root.appendChild(tag);
 
        }
@@ -228,17 +229,17 @@ void MainWindow::loadFile(const QString &fileName)
 
             qDebug() << "ELEMENT" << element.tagName();
              selectionWidget-> proxyModel->setFilterRegExp(element.attribute("Well", "" ));
-             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,selectionWidget->proxyModel->SAMPLE),element.attribute(headerStringList.at(selectionWidget->proxyModel->SAMPLE), "" ));
-             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,selectionWidget->proxyModel->DILUTION),element.attribute(headerStringList.at(selectionWidget->proxyModel->DILUTION), "" ));
-             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,selectionWidget->proxyModel->BUFFER),element.attribute(headerStringList.at(selectionWidget->proxyModel->BUFFER), "" ));
-             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,selectionWidget->proxyModel->STOCK_VOLUME),element.attribute(headerStringList.at(selectionWidget->proxyModel->STOCK_VOLUME), "" ));
-             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,selectionWidget->proxyModel->VOLUME),element.attribute(headerStringList.at(selectionWidget->proxyModel->CONC_UNIT), "" ));
-             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,selectionWidget->proxyModel->CONC_UNIT),element.attribute( headerStringList.at(selectionWidget->proxyModel->CONC_UNIT), "" ));
-             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,selectionWidget->proxyModel->QUANTITY),element.attribute(headerStringList.at(selectionWidget->proxyModel->QUANTITY), "" ));
-             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,selectionWidget->proxyModel->VOLUME_UNIT ),element.attribute(headerStringList.at(selectionWidget->proxyModel->VOLUME_UNIT ), "" ));
-             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,selectionWidget->proxyModel->STOCK_CONC ),element.attribute(headerStringList.at(selectionWidget->proxyModel->STOCK_CONC ), "" ));
+             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,Model::SAMPLE),element.attribute(headerStringList.at(Model::SAMPLE), "" ));
+             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,Model::DILUTION),element.attribute(headerStringList.at(Model::DILUTION), "" ));
+             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,Model::BUFFER),element.attribute(headerStringList.at(Model::BUFFER), "" ));
+             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,Model::STOCK_VOLUME),element.attribute(headerStringList.at(Model::STOCK_VOLUME), "" ));
+             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,Model::VOLUME),element.attribute(headerStringList.at(Model::CONC_UNIT), "" ));
+             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,Model::CONC_UNIT),element.attribute( headerStringList.at(Model::CONC_UNIT), "" ));
+             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,Model::QUANTITY),element.attribute(headerStringList.at(Model::QUANTITY), "" ));
+             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,Model::VOLUME_UNIT ),element.attribute(headerStringList.at(Model::VOLUME_UNIT ), "" ));
+             selectionWidget-> proxyModel->setData(selectionWidget->proxyModel->index(0,Model::STOCK_CONC ),element.attribute(headerStringList.at(Model::STOCK_CONC ), "" ));
 
-             qDebug()<<model->headers.at(selectionWidget->proxyModel->DILUTION);
+             qDebug()<<model->headers.at(Model::DILUTION);
 
         }
         if( node.isText() )

@@ -16,6 +16,7 @@ bool ModQSortProxyModel::setData(const QModelIndex & index, const QVariant & val
 {
         QSortFilterProxyModel::setData(index, value, role);
         emit modelModified();
+
         return 0;
 }
 
