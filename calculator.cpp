@@ -113,7 +113,7 @@ QList <double> Calculator::calculateQuantities(QList<QString> wells,QList<double
         QMessageBox::warning(this, tr("Ooops!"),
                       "Your stock concentration is too small. Continue only if you can handle negative volumes ;)" );
     }
-    result.append(" of buffer to get to the total volume of " +QString::number(iv)+volumeUnit+  " for all dilutions. ");
+    result.append(" of buffer to get to the total liquid volume of " +QString::number(iv)+volumeUnit+  " for all dilutions. ");
     result.append("\n");
     result.append("Now: ");
     result.append("\n");
@@ -130,7 +130,7 @@ QList <double> Calculator::calculateQuantities(QList<QString> wells,QList<double
         result.append(QString::number(i+1)+".) ");
         result.append("Pipette" + QString::number(targetVolumes.at(i))+ volumeUnit+" of liquid to well "+wells.at(i)+ ". ");
         double buffToAdd=intermSolVolumes.at(i+1)-(intermSolVolumes.at(i)-targetVolumes.at(i));
-        if (buffToAdd > 10E-8){
+        if (buffToAdd > 10E-9){
             result.append("Add "+QString::number(buffToAdd) + volumeUnit+ " of buffer to the remaining " + QString::number(intermSolVolumes.at(i)-targetVolumes.at(i))+volumeUnit+".\n")  ;
             result.append("You now have "+ QString::number(intermSolVolumes.at(i+1))+ volumeUnit + " of liquid for the rest of the dilutions. Shake rattle and roll! \n");
         }
