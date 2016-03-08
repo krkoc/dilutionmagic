@@ -69,8 +69,11 @@ QList <double> Calculator::calculateQuantities(QList<QString> wells,QList<double
     //result.append(QString::number(Q));
     //result.append("in common units g or mol\n");
     result.append(QString::number(userQuantity)); //add checking for moles
-    result.append(userQuantityUnit+"\n");
-
+    result.append(userQuantityUnit);
+    if (commonOutputUnit=="M"){
+        result.append("ol");
+    }
+    result.append("\n");
     double stockCInCommonUnits = converter.convert(stockC,inUnit,commonOutputUnit); //"g/L" or "moles/L"
 
     double volInCommonUnits=Q/stockCInCommonUnits; //because Q is in common units
@@ -127,10 +130,11 @@ QList <double> Calculator::calculateQuantities(QList<QString> wells,QList<double
         result.append(QString::number(i+1)+".) ");
         result.append("Pipette" + QString::number(targetVolumes.at(i))+ volumeUnit+" of liquid to well "+wells.at(i)+ ". ");
         double buffToAdd=intermSolVolumes.at(i+1)-(intermSolVolumes.at(i)-targetVolumes.at(i));
-
-        result.append("Add "+QString::number(buffToAdd) + volumeUnit+ " of buffer to the remaining " + QString::number(intermSolVolumes.at(i)-targetVolumes.at(i))+volumeUnit+".\n")  ;
-        result.append("You now have "+ QString::number(intermSolVolumes.at(i+1))+ volumeUnit + " of liquid for the rest of the dilutions. Shake rattle and roll! \n");
-          result.append("\n");
+        if (buffToAdd > 10E-8){
+            result.append("Add "+QString::number(buffToAdd) + volumeUnit+ " of buffer to the remaining " + QString::number(intermSolVolumes.at(i)-targetVolumes.at(i))+volumeUnit+".\n")  ;
+            result.append("You now have "+ QString::number(intermSolVolumes.at(i+1))+ volumeUnit + " of liquid for the rest of the dilutions. Shake rattle and roll! \n");
+        }
+        result.append("\n");
         if (i == conc.length()-2 ){
             result.append(QString::number(i+2)+".)");
                if ( intermSolVolumes.at(i+1) > 0 ) result.append("Pipette " + QString::number(targetVolumes.at(i+1))+ outUnit + " to well "+ wells.at(i+1));
